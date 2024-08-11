@@ -1,5 +1,7 @@
 # Decant
 
+[![Ruby](https://github.com/benpickles/decant/actions/workflows/main.yml/badge.svg)](https://github.com/benpickles/decant/actions/workflows/main.yml)
+
 A frontmatter-aware wrapper around a directory of static content.
 
 ## Installation
