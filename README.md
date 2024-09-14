@@ -45,7 +45,7 @@ You can fetch a `Page` instance by `.find`ing it by its extension-less path with
 
 ```ruby
 about = Page.find('about')
-about.content     # => "About\n\nMore words.\n"
+about.content     # => "# About\n\nMore words.\n"
 about.frontmatter # => {:title=>"About", :stuff=>"nonsense"}
 about.html        # => "<h1 id=\"about\">About</h1>\n\n<p>More words.</p>\n"
 about.title       # => "About"
