@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe Decant::ContentMethods do
-  describe '#all' do
+  describe '.all' do
     let(:klass) { Decant.define(dir: tmpdir, ext: ext) }
 
     before do
@@ -38,7 +38,7 @@ RSpec.describe Decant::ContentMethods do
     end
   end
 
-  describe '#find' do
+  describe '.find' do
     let(:klass) { Decant.define(dir: tmpdir) }
 
     context 'when the collection returns a path for the pattern' do
@@ -60,7 +60,7 @@ RSpec.describe Decant::ContentMethods do
     end
   end
 
-  describe '#frontmatter - adding frontmatter convenience readers' do
+  describe '.frontmatter - adding frontmatter convenience readers' do
     let(:klass) {
       Decant.define(dir: tmpdir) do
         frontmatter :title
