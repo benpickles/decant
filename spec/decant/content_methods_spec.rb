@@ -89,4 +89,14 @@ RSpec.describe Decant::ContentMethods do
       end
     end
   end
+
+  describe '#slug' do
+    let(:klass) { Decant.define(dir: tmpdir, ext: '.md') }
+
+    it 'is the relative path within its collection excluding the extension' do
+      file('foo/bar.md')
+      instance = klass.find('foo/*')
+      expect(instance.slug).to eql('foo/bar')
+    end
+  end
 end

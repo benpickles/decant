@@ -28,5 +28,9 @@ module Decant
         end
       end
     end
+
+    def slug
+      self.class.collection.slug_for(path)
+    end
   end
 end
