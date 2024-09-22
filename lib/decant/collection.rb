@@ -29,10 +29,9 @@ module Decant
 
       # The collection has no configured extension, files are identified by
       # their full (relative) path so there's no extension to remove.
-      return relative_path if ext.nil?
+      return relative_path if @delete_ext_regexp.nil?
 
-      regexp = PathUtils.delete_ext_regexp(ext)
-      relative_path.sub(regexp, '')
+      relative_path.sub(@delete_ext_regexp, '')
     end
 
     private
@@ -43,8 +42,10 @@ module Decant
       def ext=(value)
         if value
           @ext = value.start_with?('.') ? value : ".#{value}"
+          @delete_ext_regexp = PathUtils.delete_ext_regexp(ext)
         else
-          @ext = value
+          @ext = nil
+          @delete_ext_regexp = nil
         end
       end
   end
