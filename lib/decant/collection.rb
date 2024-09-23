@@ -10,20 +10,8 @@ module Decant
       self.ext = ext
     end
 
-    def dir=(value)
-      @dir = Pathname.new(value)
-    end
-
     def entries
       glob("**/*#{ext}")
-    end
-
-    def ext=(value)
-      if value
-        @ext = value.start_with?('.') ? value : ".#{value}"
-      else
-        @ext = value
-      end
     end
 
     def find(path)
@@ -34,5 +22,18 @@ module Decant
     def glob(pattern)
       dir.glob(pattern).select { |path| path.file? }
     end
+
+    private
+      def dir=(value)
+        @dir = Pathname.new(value)
+      end
+
+      def ext=(value)
+        if value
+          @ext = value.start_with?('.') ? value : ".#{value}"
+        else
+          @ext = value
+        end
+      end
   end
 end
