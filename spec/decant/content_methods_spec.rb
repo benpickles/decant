@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe Decant::ContentMethods do
-  describe '#all' do
+  describe '.all' do
     let(:klass) { Decant.define(dir: tmpdir, ext: ext) }
 
     before do
@@ -38,7 +38,7 @@ RSpec.describe Decant::ContentMethods do
     end
   end
 
-  describe '#find' do
+  describe '.find' do
     let(:klass) { Decant.define(dir: tmpdir) }
 
     context 'when the collection returns a path for the pattern' do
@@ -60,7 +60,7 @@ RSpec.describe Decant::ContentMethods do
     end
   end
 
-  describe '#frontmatter - adding frontmatter convenience readers' do
+  describe '.frontmatter - adding frontmatter convenience readers' do
     let(:klass) {
       Decant.define(dir: tmpdir) do
         frontmatter :title
@@ -87,6 +87,16 @@ RSpec.describe Decant::ContentMethods do
         instance = klass.find('foo')
         expect(instance.title).to be_nil
       end
+    end
+  end
+
+  describe '#slug' do
+    let(:klass) { Decant.define(dir: tmpdir, ext: '.md') }
+
+    it 'is the relative path within its collection excluding the extension' do
+      file('foo/bar.md')
+      instance = klass.find('foo/*')
+      expect(instance.slug).to eql('foo/bar')
     end
   end
 end

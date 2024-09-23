@@ -193,4 +193,91 @@ RSpec.describe Decant::Collection do
       )
     end
   end
+
+  context '#slug_for' do
+    let(:collection) { described_class.new(dir: dir, ext: ext) }
+    let(:dir) { Pathname.new('/tmp/not-a-real-path') }
+
+    def slug_for(path)
+      collection.slug_for(dir.join(path))
+    end
+
+    context 'when #ext is not defined' do
+      let(:ext) { nil }
+
+      it 'returns the relative path including its extension' do
+        expect(slug_for('foo.txt')).to eql('foo.txt')
+        expect(slug_for('foo/bar.txt')).to eql('foo/bar.txt')
+      end
+    end
+
+    context 'when #ext is defined' do
+      let(:ext) { '.md' }
+
+      it 'returns the relative path with a matching extension removed' do
+        expect(slug_for('foo.md')).to eql('foo')
+        expect(slug_for('foo.md.md')).to eql('foo.md')
+        expect(slug_for('foo.bar.md')).to eql('foo.bar')
+        expect(slug_for('foo/bar.md')).to eql('foo/bar')
+        expect(slug_for('foo/bar.txt')).to eql('foo/bar.txt')
+      end
+    end
+
+    context 'when #ext is a double extension' do
+      let(:ext) { '.html.erb' }
+
+      it 'removes a matching double extension' do
+        expect(slug_for('foo.html.erb')).to eql('foo')
+        expect(slug_for('foo/bar.html.erb')).to eql('foo/bar')
+        expect(slug_for('foo.html')).to eql('foo.html')
+        expect(slug_for('foo.erb')).to eql('foo.erb')
+      end
+    end
+
+    context 'when #ext is .*' do
+      let(:ext) { '.*' }
+
+      it 'removes any extension' do
+        expect(slug_for('foo.md')).to eql('foo')
+        expect(slug_for('foo.md.txt')).to eql('foo.md')
+        expect(slug_for('foo/bar.md')).to eql('foo/bar')
+        expect(slug_for('foo/bar.txt')).to eql('foo/bar')
+        expect(slug_for('foo/bar')).to eql('foo/bar')
+      end
+    end
+
+    context 'when #ext includes shell-like expansion' do
+      let(:ext) { '.{markdown,md}' }
+
+      it 'removes either matching extension' do
+        expect(slug_for('foo.markdown')).to eql('foo')
+        expect(slug_for('foo.md')).to eql('foo')
+        expect(slug_for('foo.markdown.md')).to eql('foo.markdown')
+        expect(slug_for('foo/bar.md')).to eql('foo/bar')
+        expect(slug_for('foo.mark')).to eql('foo.mark')
+      end
+    end
+
+    context 'when #ext includes shell-like expansion with only one item' do
+      let(:ext) { '.{md}' }
+
+      it 'removes a matching extension' do
+        expect(slug_for('foo.md')).to eql('foo')
+        expect(slug_for('foo.md.md')).to eql('foo.md')
+        expect(slug_for('foo/bar.md')).to eql('foo/bar')
+        expect(slug_for('foo.txt')).to eql('foo.txt')
+      end
+    end
+
+    context 'when #ext includes shell expansion including a double extension' do
+      let(:ext) { '.{html.erb,txt}' }
+
+      it 'removes either matching extension' do
+        expect(slug_for('foo/bar.txt')).to eql('foo/bar')
+        expect(slug_for('foo.html.erb')).to eql('foo')
+        expect(slug_for('foo.txt')).to eql('foo')
+        expect(slug_for('foo.md')).to eql('foo.md')
+      end
+    end
+  end
 end

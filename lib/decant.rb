@@ -7,7 +7,7 @@ require_relative 'decant/version'
 module Decant
   def self.define(dir:, ext: nil, &block)
     Class.new(File) do
-      extend ContentMethods
+      include ContentMethods
       @collection = Collection.new(dir: dir, ext: ext)
       class_eval(&block) if block_given?
     end
