@@ -135,62 +135,88 @@ RSpec.describe Decant::Collection do
   end
 
   describe '#glob' do
-    let(:collection) { described_class.new(dir: tmpdir, ext: 'md') }
+    let(:collection) { described_class.new(dir: tmpdir, ext: ext) }
 
     before do
       file('a/b/c/d')
       file('a/b/c/d.md')
       file('a/b/c/d.txt')
-      file('a/b/d')
+      file('a/b/c/de.md')
       file('a/b/d.md')
-      file('a/d.mdn')
+      file('a/b/d.mdn')
+      file('a/b/de.md')
+      file('a/b/d.txt')
+      file('a/d/')
       file('d')
-      file('d.foo')
       file('d.md')
-      file('de/')
+      file('d.txt')
+      file('de.md')
     end
 
-    it 'returns files ignoring #ext and otherwise behaves like a standard Dir.glob' do
-      expect(collection.glob('d')).to contain_exactly(
-        file_path('d'),
-      )
-      expect(collection.glob('d.*')).to contain_exactly(
-        file_path('d.foo'),
-        file_path('d.md'),
-      )
-      expect(collection.glob('d*')).to contain_exactly(
-        file_path('d'),
-        file_path('d.foo'),
-        file_path('d.md'),
-      )
-      expect(collection.glob('a/*/d*')).to contain_exactly(
-        file_path('a/b/d'),
-        file_path('a/b/d.md'),
-      )
-      expect(collection.glob('a/**/d*')).to contain_exactly(
-        file_path('a/b/c/d'),
-        file_path('a/b/c/d.md'),
-        file_path('a/b/c/d.txt'),
-        file_path('a/b/d'),
-        file_path('a/b/d.md'),
-        file_path('a/d.mdn'),
-      )
-      expect(collection.glob('**/d.md')).to contain_exactly(
-        file_path('a/b/c/d.md'),
-        file_path('a/b/d.md'),
-        file_path('d.md'),
-      )
-      expect(collection.glob('**/d.md*')).to contain_exactly(
-        file_path('a/b/c/d.md'),
-        file_path('a/b/d.md'),
-        file_path('a/d.mdn'),
-        file_path('d.md'),
-      )
-      expect(collection.glob('a/b/**/*.{md,txt}')).to contain_exactly(
-        file_path('a/b/c/d.md'),
-        file_path('a/b/c/d.txt'),
-        file_path('a/b/d.md'),
-      )
+    context 'when #ext is defined' do
+      let(:ext) { '.md' }
+
+      it 'combines the supplied pattern with the configured #ext and returns only files' do
+        expect(collection.glob('d')).to contain_exactly(
+          file_path('d.md'),
+        )
+        expect(collection.glob('d*')).to contain_exactly(
+          file_path('d.md'),
+          file_path('de.md'),
+        )
+        expect(collection.glob('a/*/d*')).to contain_exactly(
+          file_path('a/b/d.md'),
+          file_path('a/b/de.md'),
+        )
+        expect(collection.glob('a/**/d*')).to contain_exactly(
+          file_path('a/b/c/d.md'),
+          file_path('a/b/c/de.md'),
+          file_path('a/b/d.md'),
+          file_path('a/b/de.md'),
+        )
+        expect(collection.glob('**/d')).to contain_exactly(
+          file_path('a/b/c/d.md'),
+          file_path('a/b/d.md'),
+          file_path('d.md'),
+        )
+      end
+    end
+
+    context 'when #ext is more complicated' do
+      let(:ext) { '.{md,txt}' }
+
+      it 'also works' do
+        expect(collection.glob('**/d')).to contain_exactly(
+          file_path('a/b/c/d.md'),
+          file_path('a/b/c/d.txt'),
+          file_path('a/b/d.md'),
+          file_path('a/b/d.txt'),
+          file_path('d.md'),
+          file_path('d.txt'),
+        )
+      end
+    end
+
+    context 'when #ext is not defined' do
+      let(:ext) { nil }
+
+      it 'requires you to pass your own #ext if wanted' do
+        expect(collection.glob('d')).to contain_exactly(
+          file_path('d'),
+        )
+        expect(collection.glob('d.md')).to contain_exactly(
+          file_path('d.md'),
+        )
+        expect(collection.glob('**/d')).to contain_exactly(
+          file_path('a/b/c/d'),
+          file_path('d'),
+        )
+        expect(collection.glob('**/d.md')).to contain_exactly(
+          file_path('a/b/c/d.md'),
+          file_path('a/b/d.md'),
+          file_path('d.md'),
+        )
+      end
     end
   end
 
