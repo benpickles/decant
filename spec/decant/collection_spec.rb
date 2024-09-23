@@ -1,10 +1,35 @@
 # frozen_string_literal: true
 RSpec.describe Decant::Collection do
-  describe '#dir=' do
-    context 'when passed a String' do
+  describe '#initialize' do
+    subject { described_class.new(dir: 'foo', ext: ext) }
+
+    let(:ext) { nil }
+
+    context 'with a String #dir' do
       it 'is converted to a Pathname' do
-        collection = described_class.new(dir: 'foo')
-        expect(collection.dir).to be_a(Pathname)
+        expect(subject.dir).to be_a(Pathname)
+      end
+    end
+
+    context 'when #ext includes a leading dot' do
+      let(:ext) { '.foo' }
+
+      it 'it remains' do
+        expect(subject.ext).to eql('.foo')
+      end
+    end
+
+    context 'when #ext does not include a leading dot' do
+      let(:ext) { 'foo' }
+
+      it 'one is added' do
+        expect(subject.ext).to eql('.foo')
+      end
+    end
+
+    context 'when #ext is nil' do
+      it do
+        expect(subject.ext).to be_nil
       end
     end
   end
@@ -31,7 +56,7 @@ RSpec.describe Decant::Collection do
         file('xyz/')
       end
 
-      it 'only includes _files_ with the extension' do
+      it 'only includes files with the extension' do
         expect(subject).to contain_exactly(
           file_path('features/foo.aa'),
           file_path('foo.aa'),
@@ -51,7 +76,7 @@ RSpec.describe Decant::Collection do
         file('noext')
       end
 
-      it 'lists all nested _files_' do
+      it 'lists all nested files' do
         expect(subject).to contain_exactly(
           file_path('a/b.en'),
           file_path('a/b/c/d.exe'),
@@ -59,32 +84,6 @@ RSpec.describe Decant::Collection do
           file_path('foo.b'),
           file_path('noext'),
         )
-      end
-    end
-  end
-
-  describe '#ext=' do
-    let(:collection) { described_class.new(dir: 'foo') }
-
-    context 'when a leading dot is present' do
-      it 'it remains' do
-        collection.ext = '.foo'
-        expect(collection.ext).to eql('.foo')
-      end
-    end
-
-    context 'when a leading dot is not present' do
-      it 'one is added' do
-        collection.ext = 'foo'
-        expect(collection.ext).to eql('.foo')
-      end
-    end
-
-    context 'with nil' do
-      it do
-        collection.ext = 'foo'
-        collection.ext = nil
-        expect(collection.ext).to be_nil
       end
     end
   end
@@ -151,7 +150,7 @@ RSpec.describe Decant::Collection do
       file('de/')
     end
 
-    it 'returns _files_ ignoring #ext and otherwise behaves like a standard Dir.glob' do
+    it 'returns files ignoring #ext and otherwise behaves like a standard Dir.glob' do
       expect(collection.glob('d')).to contain_exactly(
         file_path('d'),
       )
