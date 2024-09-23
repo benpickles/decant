@@ -6,6 +6,8 @@ module FileHelpers
   def file(path, content = nil)
     full_path = file_path(path)
 
+    raise "a file already exists at #{path}" if full_path.exist?
+
     if path.end_with?('/')
       FileUtils.mkdir_p(full_path)
     else

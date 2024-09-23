@@ -12,16 +12,15 @@ module Decant
     end
 
     def entries
-      glob("**/*#{ext}")
+      glob('**/*')
     end
 
-    def find(path)
-      pattern = "#{path}#{ext}"
+    def find(pattern)
       glob(pattern).first
     end
 
     def glob(pattern)
-      dir.glob(pattern).select { |path| path.file? }
+      dir.glob("#{pattern}#{ext}").select { |path| path.file? }
     end
 
     def slug_for(path)
