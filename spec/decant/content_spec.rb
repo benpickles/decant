@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Decant::ContentMethods do
+RSpec.describe Decant::Content do
   describe '.all' do
     let(:klass) { Decant.define(dir: tmpdir, ext: ext) }
 
