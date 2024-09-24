@@ -1,13 +1,10 @@
 # frozen_string_literal: true
 require_relative 'errors'
+require_relative 'file'
 
 module Decant
-  module ContentMethods
-    def self.included(base)
-      base.extend(ClassMethods)
-    end
-
-    module ClassMethods
+  class Content < File
+    class << self
       attr_reader :collection
 
       def all

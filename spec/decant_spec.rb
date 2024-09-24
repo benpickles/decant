@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Decant do
   describe '.define' do
-    it 'sets up a new File subclass with an associated Collection and exposes the class body to the block' do
+    it 'sets up a new Content subclass with an associated Collection and exposes the class body to the block' do
       content = <<~CONTENT
         ---
         title: Welcome
