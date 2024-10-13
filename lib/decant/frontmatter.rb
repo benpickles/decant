@@ -4,6 +4,33 @@ require 'yaml'
 
 module Decant
   module Frontmatter
+    # Parse a +String+ input (the contents of a file) into its frontmatter /
+    # content constituents.
+    #
+    # For frontmatter to be valid/detected the +input+ must start with a line
+    # consisting of three dashes +---+, then the YAML, then another line of
+    # three dashes. The returned +Hash+ will have +Symbol+ keys.
+    #
+    # Technically frontmatter can be any valid YAML not just key/value pairs but
+    # this would be very unusual and wouldn't be compatible with other
+    # frontmatter-related expectations like {Content.frontmatter}.
+    #
+    # @example Input with valid frontmatter
+    #   ---
+    #   title: Frontmatter
+    #   ---
+    #   The rest of the content
+    #
+    # @example Result of loading the above input
+    #   Decant::Frontmatter.load(string)
+    #   # => [{:title=>"Frontmatter"}, "The rest of the content"]
+    #
+    # @param input [String]
+    #
+    # @return [Array([Hash<Symbol, anything>, nil], String)] a frontmatter /
+    #   content tuple. If +input+ contains frontmatter then the YAML will be
+    #   parsed into a +Hash+ with +Symbol+ keys, if it doesn't have frontmatter
+    #   then it will be +nil+.
     def self.load(input)
       return [nil, input] unless input.start_with?("---\n")
 

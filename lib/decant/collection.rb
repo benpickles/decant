@@ -4,25 +4,51 @@ require_relative 'path_utils'
 
 module Decant
   class Collection
-    attr_reader :dir, :ext
+    # @return [Pathname]
+    attr_reader :dir
 
+    # @return [String, nil]
+    attr_reader :ext
+
+    # @param dir [Pathname, String]
+    # @param ext [String, nil]
     def initialize(dir:, ext: nil)
       self.dir = dir
       self.ext = ext
     end
 
+    # @return [Array<Pathname>]
     def entries
       glob('**/*')
     end
 
+    # If {#ext} is defined then +pattern+ MUST NOT include the file's extension
+    # as it will automatically be added, if {#ext} is +nil+ then +pattern+ MUST
+    # include the file's extension - essentially becoming the file's full
+    # relative path within {#dir}.
+    #
+    # Technically +pattern+ can be any pattern supported by +Dir.glob+ though
+    # it's more likely to simply be a file name.
+    #
+    # @param pattern [String]
+    #
+    # @return [Pathname, nil]
     def find(pattern)
       glob(pattern).first
     end
 
+    # @param pattern [String]
+    #
+    # @return [Array<Pathname>]
     def glob(pattern)
       dir.glob("#{pattern}#{ext}").select { |path| path.file? }
     end
 
+    # The extension-less relative path of +path+ within {#dir}.
+    #
+    # @param path [Pathname]
+    #
+    # @return [String]
     def slug_for(path)
       relative_path = path.relative_path_from(dir).to_s
 
