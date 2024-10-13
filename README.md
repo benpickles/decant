@@ -22,9 +22,8 @@ Page = Decant.define(dir: '_pages', ext: 'md') do
   frontmatter :title
 
   # Add custom methods - it's a standard Ruby class.
-  def html
-    # Decant doesn't know about Markdown etc so you should bring your own.
-    Kramdown::Document.new(content).to_html
+  def shouty
+    "#{title.upcase}!!!"
   end
 end
 ```
@@ -47,8 +46,8 @@ You can fetch a `Page` instance by `.find`ing it by its extension-less path with
 about = Page.find('about')
 about.content     # => "# About\n\nMore words.\n"
 about.frontmatter # => {:title=>"About", :stuff=>"nonsense"}
-about.html        # => "<h1 id=\"about\">About</h1>\n\n<p>More words.</p>\n"
 about.title       # => "About"
+about.shouty      # => "ABOUT!!!"
 ```
 
 ## Contributing
