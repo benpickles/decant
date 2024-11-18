@@ -1,8 +1,12 @@
 # CHANGELOG
 
+## Unreleased
+
+- Add `Content#relative_path` which returns a file's relative path within its collection.
+
 ## Version 0.2.0 - 2024-10-13
 
-- Add support for a content instance knowing its own `#slug` - its relative path within its collection:
+- Add support for a content instance knowing its own `#slug` - its extension-less relative path within its collection:
 
   ```ruby
   Page = Decant.define(dir: 'content', ext: 'md')
