@@ -44,13 +44,22 @@ module Decant
       dir.glob("#{pattern}#{ext}").select { |path| path.file? }
     end
 
+    # The relative path of +path+ within {#dir}.
+    #
+    # @param path [Pathname]
+    #
+    # @return [String]
+    def relative_path_for(path)
+      path.relative_path_from(dir).to_s
+    end
+
     # The extension-less relative path of +path+ within {#dir}.
     #
     # @param path [Pathname]
     #
     # @return [String]
     def slug_for(path)
-      relative_path = path.relative_path_from(dir).to_s
+      relative_path = relative_path_for(path)
 
       # The collection has no configured extension, files are identified by
       # their full (relative) path so there's no extension to remove.

@@ -220,6 +220,33 @@ RSpec.describe Decant::Collection do
     end
   end
 
+  context '#relative_path_for' do
+    let(:collection) { described_class.new(dir: dir, ext: ext) }
+    let(:dir) { Pathname.new('/tmp/not-a-real-path') }
+
+    def relative_path_for(path)
+      collection.relative_path_for(dir.join(path))
+    end
+
+    context 'when #ext is not defined' do
+      let(:ext) { nil }
+
+      it 'includes the extension' do
+        expect(relative_path_for('foo.txt')).to eql('foo.txt')
+        expect(relative_path_for('foo/bar.txt')).to eql('foo/bar.txt')
+      end
+    end
+
+    context 'when #ext is defined' do
+      let(:ext) { '.md' }
+
+      it 'returns the relative path' do
+        expect(relative_path_for('foo.md')).to eql('foo.md')
+        expect(relative_path_for('foo/bar.md')).to eql('foo/bar.md')
+      end
+    end
+  end
+
   context '#slug_for' do
     let(:collection) { described_class.new(dir: dir, ext: ext) }
     let(:dir) { Pathname.new('/tmp/not-a-real-path') }

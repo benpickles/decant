@@ -49,6 +49,20 @@ module Decant
       end
     end
 
+    # The relative path of the file within its collection.
+    #
+    # @example
+    #   Page = Decant.define(dir: 'content', ext: 'md')
+    #
+    #   page = Page.find('features/slugs')
+    #   page.path.expand_path # => "/Users/dave/my-website/content/features/slugs.md"
+    #   page.relative_path    # => "features/slugs.md"
+    #
+    # @return [String]
+    def relative_path
+      self.class.collection.relative_path_for(path)
+    end
+
     # The extension-less relative path of the file within its collection.
     #
     # @example
