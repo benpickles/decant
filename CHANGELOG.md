@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## Version 0.3.0 - 2024-11-19
 
 - Add `Content#relative_path` which returns a file's relative path within its collection.
 

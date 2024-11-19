@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ['Ben Pickles']
   spec.email = ['spideryoung@gmail.com']
 
-  spec.summary = 'A frontmatter-aware wrapper around a directory of static content'
+  spec.summary = 'A dependency-free frontmatter-aware framework-agnostic wrapper around a directory of static content'
   spec.description = spec.summary
   spec.homepage = 'https://github.com/benpickles/decant'
   spec.license = 'MIT'
