@@ -47,6 +47,13 @@ module Decant
           end
         end
       end
+
+      # @param pattern [String]
+      #
+      # @return [Array<Content>]
+      def glob(pattern)
+        collection.glob(pattern).map { |path| new(path) }
+      end
     end
 
     # The relative path of the file within its collection.

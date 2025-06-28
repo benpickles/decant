@@ -90,6 +90,24 @@ RSpec.describe Decant::Content do
     end
   end
 
+  describe '.glob' do
+    let(:klass) { Decant.define(dir: tmpdir, ext: '.md') }
+
+    it 'returns matching instances of the klass' do
+      file('foo.txt')
+      file('foo.md')
+      file('food.md')
+      file('bar.md')
+
+      items = klass.glob('foo*')
+
+      expect(items).to contain_exactly(
+        have_attributes(class: klass, path: file_path('foo.md')),
+        have_attributes(class: klass, path: file_path('food.md')),
+      )
+    end
+  end
+
   describe '#relative_path' do
     let(:klass) { Decant.define(dir: tmpdir, ext: '.md') }
 
