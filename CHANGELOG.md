@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 0.4.0 - 2025-06-30
+
+- Add `Content.glob` which uses its collection's glob method and returns instances of the class.
+
 ## Version 0.3.0 - 2024-11-19
 
 - Add `Content#relative_path` which returns a file's relative path within its collection.
