@@ -1,9 +1,13 @@
 # frozen_string_literal: true
+require 'date'
 require 'strscan'
 require 'yaml'
 
 module Decant
   module Frontmatter
+    # Additional permitted classes passed to +YAML.safe_load+ via {.load}.
+    PERMITTED_CLASSES = [::Date, ::Time]
+
     # Parse a +String+ input (the contents of a file) into its frontmatter /
     # content constituents.
     #
@@ -41,8 +45,14 @@ module Decant
 
       return [nil, input] unless yaml
 
+      data = YAML.safe_load(
+        yaml,
+        permitted_classes: PERMITTED_CLASSES,
+        symbolize_names: true,
+      )
+
       [
-        YAML.safe_load(yaml, symbolize_names: true) || {},
+        data || {},
         scanner.post_match
       ]
     end

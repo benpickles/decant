@@ -166,5 +166,67 @@ RSpec.describe Decant::Frontmatter do
         expect(content).to eql(input)
       end
     end
+
+    context 'with all permitted frontmatter value types' do
+      let(:input) {
+        <<~INPUT
+          ---
+          array:
+          - a
+          - b
+          - c
+          boolean_false: false
+          boolean_true: yes
+          date: 2025-08-14
+          float: 3.14
+          hash:
+            foo:
+              bar: baz
+          integer: 123
+          nil: null
+          string: hello
+          time: 2025-08-14T20:27:36+01:00
+          time_no_zone: 2025-08-14T20:27:36
+          ---
+        INPUT
+      }
+
+      it 'parses them correctly' do
+        expect(frontmatter).to eql({
+          array: ['a', 'b', 'c'],
+          boolean_false: false,
+          boolean_true: true,
+          date: Date.new(2025, 8, 14),
+          float: 3.14,
+          hash: {
+            foo: {
+              bar: 'baz',
+            },
+          },
+          integer: 123,
+          nil: nil,
+          string: 'hello',
+          time: Time.new(2025, 8, 14, 20, 27, 36, '+01:00'),
+          time_no_zone: Time.gm(2025, 8, 14, 20, 27, 36),
+        })
+      end
+    end
+
+    context 'with an unpermitted frontmatter value type' do
+      let(:input) {
+        <<~INPUT
+          ---
+          range: !ruby/range
+            begin: 0
+            end: 42
+            excl: false
+          ---
+        INPUT
+      }
+
+      it do
+        expect { frontmatter }.to raise_error(Psych::DisallowedClass)
+      end
+    end
   end
 end
