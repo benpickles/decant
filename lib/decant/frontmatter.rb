@@ -6,7 +6,7 @@ require 'yaml'
 module Decant
   module Frontmatter
     # Additional permitted classes passed to +YAML.safe_load+ via {.load}.
-    PERMITTED_CLASSES = [::Date, ::Time]
+    PERMITTED_CLASSES = [Date, Time]
 
     # Parse a +String+ input (the contents of a file) into its frontmatter /
     # content constituents.
